@@ -61,10 +61,12 @@ sub syntax {
 
 # Parse command line options.
 my ($help, $host, $version);
+my $port = 7000;
 Getopt::Long::config ('bundling', 'no_ignore_case');
 GetOptions ('c|critical=i' => \$CRITICAL,
             'H|hostname=s' => \$host,
             'h|help'       => \$help,
+            'p|port=i'     => \$port,
             't|timeout=i'  => \$TIMEOUT,
             'V|version'    => \$version,
             'w|warning=i'  => \$WARNINGS)
@@ -92,7 +94,7 @@ alarm ($TIMEOUT);
 
 # Run rxdebug and parse the output to find the number of calls waiting for a
 # thread.
-unless (open (RXDEBUG, "$RXDEBUG $host -noconn |")) {
+unless (open (RXDEBUG, "$RXDEBUG $host $port -noconn |")) {
     warn "$0: cannot run rxdebug\n";
     exit 3;
 }
@@ -173,6 +175,10 @@ This option is required.
 
 Print out this documentation (which is done simply by feeding the script
 to C<perldoc -t>).
+
+=item B<-p> I<port>, B<--port>=I<port>
+
+Contact the rx peer on UDP port I<port>.  Default 7000.
 
 =item B<-t> I<timeout>, B<--timeout>=I<timeout>
 
